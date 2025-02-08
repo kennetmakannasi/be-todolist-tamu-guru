@@ -8,6 +8,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@prisma/client": "^6.3.0",
+    "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
@@ -15,7 +17,8 @@
     "http-errors": "~1.6.3",
     "jade": "^0.29.0",
     "morgan": "~1.9.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "stringify": "^5.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -23,7 +26,8 @@
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "nodemon": "^3.1.9",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "prisma": "^6.3.0"
   },
   "husky": {
     "hooks": {
