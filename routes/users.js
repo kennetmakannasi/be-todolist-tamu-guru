@@ -28,49 +28,51 @@ router.get('get-user/:id', async function (req, res) {
 // Create User
 router.post('/create', async function (req, res) {
   const { username, email, password } = req.body;
-  username === ''
-    ? res.json('Please fill the username field')
-    : email === ''
-      ? res.json('Please fill the email field')
-      : password === ''
-        ? res.json('Please fill the password field')
-        : async () => {
-            const hashPassword = await bcrypt.hash(password, 10);
-            const user = await prisma.user.create({
-              data: {
-                username: username,
-                email: email,
-                password: hashPassword,
-              },
-            });
-            res.send(user);
-          };
+
+  if (!username) return res.json({ error: 'Please fill the username field' });
+  if (!email) return res.json({ error: 'Please fill the email field' });
+  if (!password) return res.json({ error: 'Please fill the password field' });
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  const user = await prisma.user.create({
+    data: {
+      username: username,
+      email: email,
+      password: hashPassword,
+    },
+  });
+  res.send(user);
 });
 
 // Update User
 router.put('/update/:id', async function (req, res) {
   const { id } = req.params;
   const { username, email, password } = req.body;
-  username === ''
-    ? res.json('Please fill the username field')
-    : email === ''
-      ? res.json('Please fill the email field')
-      : password === ''
-        ? res.json('Please fill the password field')
-        : async () => {
-            const hashPassword = await bcrypt.hash(password, 10);
-            const user = await prisma.user.create({
-              where: {
-                id: parseInt(id),
-              },
-              data: {
-                username: username,
-                email: email,
-                password: hashPassword,
-              },
-            });
-            res.send(user);
-          };
+
+  const userExist = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!userExist) return res.json({ error: `user with id ${id} not found` });
+
+  if (!username) return res.json({ error: 'Please fill the username field' });
+  if (!email) return res.json({ error: 'Please fill the email field' });
+  if (!password) return res.json({ error: 'Please fill the password field' });
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  const user = await prisma.user.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      username: username,
+      email: email,
+      password: hashPassword,
+    },
+  });
+  res.send(user);
 });
 
 // Delete User
@@ -81,16 +83,15 @@ router.delete('/delete/:id', async function (req, res) {
       id: parseInt(id),
     },
   });
-  userExist === null
-    ? res.json(`user with id ${id} not found`)
-    : async () => {
-        const user = await prisma.user.delete({
-          where: {
-            id: parseInt(id),
-          },
-        });
-        res.send(user);
-      };
+
+  if (!userExist) return res.json({ error: `user with id ${id} not found` });
+
+  const user = await prisma.user.delete({
+    where: {
+      id: parseInt(id),
+    },
+  });
+  res.send(user);
 });
 
 module.exports = router;
