@@ -54,9 +54,14 @@ app.use(function (err, req, res) {
 
 const port = process.env.APP_PORT || 8080;
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+//check env
+const env = process.env.ENV_TYPE || 'production';
+
+if (env === 'development') {
+  // Start server
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
 
 module.exports = app;
